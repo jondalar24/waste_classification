@@ -12,6 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import shutil
+import random
 
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.applications import VGG16
@@ -130,25 +131,6 @@ history = model.fit(
 loss, acc = model.evaluate(test_gen)
 print(f" Precisión en test: {acc:.2f}")
 
-# =======================
-#  PREDICCIÓN SOBRE IMAGEN INDIVIDUAL
-# =======================
-import random
+model.save("waste_model_vgg16.h5")
 
-class_names = list(test_gen.class_indices.keys())
-folder = random.choice(class_names)
-path = os.path.join(TEST_DIR, folder)
-img_name = random.choice(os.listdir(path))
-img_path = os.path.join(path, img_name)
 
-img = image.load_img(img_path, target_size=IMG_SIZE)
-img_array = image.img_to_array(img) / 255.0
-img_array = np.expand_dims(img_array, axis=0)
-
-prediction = model.predict(img_array)
-predicted_class = class_names[np.argmax(prediction)]
-
-plt.imshow(img)
-plt.title(f"Predicción: {predicted_class}")
-plt.axis('off')
-plt.show()

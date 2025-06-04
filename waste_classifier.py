@@ -11,6 +11,9 @@ import zipfile
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
+import shutil
+
+from sklearn.model_selection import train_test_split
 from tensorflow.keras.applications import VGG16
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Dropout
@@ -25,20 +28,40 @@ ZIP_FILENAME = "o-vs-r-split-reduced-1200.zip"
 EXTRACTED_FOLDER = "dataset"
 
 if not os.path.exists(EXTRACTED_FOLDER):
-    print(f"📦 Extrayendo {ZIP_FILENAME}...")
+    print(f" Extrayendo {ZIP_FILENAME}...")
     with zipfile.ZipFile(ZIP_FILENAME, 'r') as zip_ref:
         zip_ref.extractall(EXTRACTED_FOLDER)
-    print("✅ Extracción completada.")
+    print(" Extracción completada.")
 else:
-    print("✅ Dataset ya extraído.")
+    print(" Dataset ya extraído.")
 
 # =======================
 # CONFIGURACIÓN INICIAL
 # =======================
 # Definir rutas dentro de la carpeta extraída
 TRAIN_DIR = os.path.join(EXTRACTED_FOLDER, "train")
-VAL_DIR = os.path.join(EXTRACTED_FOLDER, "val")
 TEST_DIR = os.path.join(EXTRACTED_FOLDER, "test")
+VAL_DIR = os.path.join(EXTRACTED_FOLDER, "val")
+
+if not os.path.exists(VAL_DIR):
+    print(" Generando conjunto de validación a partir de entrenamiento...")
+    for class_name in os.listdir(TRAIN_DIR):
+        class_train_path = os.path.join(TRAIN_DIR, class_name)
+        images = os.listdir(class_train_path)
+        train_imgs, val_imgs = train_test_split(images, test_size=0.1, random_state=42)
+
+        # Crear carpetas de validación por clase
+        class_val_path = os.path.join(VAL_DIR, class_name)
+        os.makedirs(class_val_path, exist_ok=True)
+
+        for img in val_imgs:
+            shutil.move(
+                os.path.join(class_train_path, img),
+                os.path.join(class_val_path, img)
+            )
+    print(" Validación generada.")
+else:
+    print(" Conjunto de validación ya presente.")
 
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32

@@ -1,10 +1,10 @@
-#  Waste Classification with Transfer Learning (VGG16)
+# Waste Classification with Transfer Learning (VGG16)
 
 Este proyecto aplica **transfer learning** para clasificar imágenes de residuos como **orgánicos** o **reciclables**. Se utiliza el modelo preentrenado **VGG16** sobre ImageNet como extractor de características, y se entrena una cabeza personalizada para ajustarse al nuevo conjunto de datos.
 
 ---
 
-##  Objetivos del Proyecto
+## Objetivos del Proyecto
 
 - Aplicar transferencia de aprendizaje para clasificación de imágenes.
 - Preprocesar imágenes usando `ImageDataGenerator`.
@@ -14,9 +14,9 @@ Este proyecto aplica **transfer learning** para clasificar imágenes de residuos
 
 ---
 
-##  ¿Cómo funciona este script?
+## ¿Cómo funciona este programa?
 
-El script `waste_classifier.py` sigue una estructura clara y modular que puede adaptarse fácilmente a otros conjuntos de datos. Aquí explicamos cada bloque:
+El script `waste_classifier_model.py` sigue una estructura clara y modular que puede adaptarse fácilmente a otros conjuntos de datos. Aquí explicamos cada bloque:
 
 ### 1️⃣ Importación de librerías
 Se importan librerías estándar de Machine Learning (TensorFlow, Keras, NumPy, Matplotlib) para construir y entrenar la red neuronal.
@@ -39,28 +39,30 @@ El modelo se entrena con `categorical_crossentropy`, `adam` como optimizador y c
 ### 7️⃣ Evaluación
 Se evalúa el modelo sobre el conjunto de test y se imprime la precisión.
 
-### 8️⃣ Predicción visual
-Se selecciona aleatoriamente una imagen de test y se muestra junto con la clase predicha.
+---
+
+## Segundo script: `predicted_waste.py`
+
+Este script carga el modelo generado por `waste_classifier_model.py` y permite introducir un número de índice para comprobar la capacidad de predicción en una imagen del dataset que el modelo no ha visto durante el entrenamiento.
 
 ---
 
-##  Cómo usar este proyecto
+## Cómo usar este proyecto
 
-1. **Organiza tu dataset** así:
-
+1. **Organiza tu dataset así**  
 (tiene un automatizador de creación de carpetas, pero necesita que quede en esta forma)
 
 ```
 dataset/
 ├── train/
-│   ├── reciclable/
-│   └── organico/
+│   ├── R/
+│   └── O/
 ├── val/
-│   ├── reciclable/
-│   └── organico/
+│   ├── R/
+│   └── O/
 └── test/
-    ├── reciclable/
-    └── organico/
+    ├── R/
+    └── O/
 ```
 
 2. **Instala las dependencias**:
@@ -69,15 +71,21 @@ dataset/
 pip install -r requirements.txt
 ```
 
-3. **Ejecuta el script**:
+3. **Ejecuta el script de entrenamiento**:
 
 ```bash
-python waste_classifier.py
+python waste_classifier_model.py
+```
+
+4. **Ejecuta el script de predicción**:
+
+```bash
+python predicted_waste.py
 ```
 
 ---
 
-##  Cómo adaptarlo a un proyecto real
+## Cómo adaptarlo a un proyecto real
 
 Este flujo de trabajo es fácilmente adaptable a otras tareas de clasificación de imágenes. Para ello:
 
@@ -97,4 +105,3 @@ base_model = InceptionV3(include_top=False, weights='imagenet', input_shape=(224
   - Exportar el modelo con `model.save("modelo_final.h5")` y cargarlo en un sistema embebido o dispositivo edge.
 
 ---
-

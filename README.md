@@ -48,6 +48,8 @@ Se selecciona aleatoriamente una imagen de test y se muestra junto con la clase 
 
 1. **Organiza tu dataset** así:
 
+(tiene un automatizador de creación de carpetas, pero necesita que quede en esta forma)
+
 ```
 dataset/
 ├── train/
